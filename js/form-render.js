@@ -47,6 +47,19 @@ window.FormRender = {
     required.forEach((field) => {
       const wrapper = field.closest('.form-field');
       const errorEl = wrapper?.querySelector('.form-field__error');
+
+      if (field.type === 'checkbox') {
+        if (!field.checked) {
+          valid = false;
+          field.classList.add('is-invalid');
+          if (errorEl) errorEl.textContent = 'Необходимо согласие';
+        } else {
+          field.classList.remove('is-invalid');
+          if (errorEl) errorEl.textContent = '';
+        }
+        return;
+      }
+
       const value = field.value.trim();
 
       if (!value) {
@@ -68,10 +81,37 @@ window.FormRender = {
 
   bindValidation(formEl) {
     formEl?.querySelectorAll('input, select, textarea').forEach((field) => {
-      field.addEventListener('input', () => {
+      const eventName = field.type === 'checkbox' ? 'change' : 'input';
+      field.addEventListener(eventName, () => {
         field.classList.remove('is-invalid');
         const errorEl = field.closest('.form-field')?.querySelector('.form-field__error');
         if (errorEl) errorEl.textContent = '';
+      });
+    });
+  },
+
+  bindPhoneMask(formEl) {
+    formEl?.querySelectorAll('input[type="tel"]').forEach((input) => {
+      input.addEventListener('input', () => {
+        const digits = input.value.replace(/\D/g, '').slice(0, 11);
+        let formatted = digits;
+
+        if (digits.startsWith('8') || digits.startsWith('7')) {
+          const d = digits.startsWith('8') ? '7' + digits.slice(1) : digits;
+          const parts = [
+            d.slice(0, 1),
+            d.slice(1, 4),
+            d.slice(4, 7),
+            d.slice(7, 9),
+            d.slice(9, 11),
+          ];
+          if (d.length > 1) formatted = `+${parts[0]} (${parts[1]}`;
+          if (d.length >= 4) formatted += `) ${parts[2]}`;
+          if (d.length >= 7) formatted += `-${parts[3]}`;
+          if (d.length >= 9) formatted += `-${parts[4]}`;
+        }
+
+        input.value = formatted;
       });
     });
   },

@@ -114,6 +114,10 @@ contacts:
       - { name: address, label: "Адрес доставки", type: text, required: true }
       - { name: comment, label: "Комментарий", type: textarea, required: false }
 
+form_consent:
+  text: "Даю согласие на обработку персональных данных"
+  required: true
+
 form_modal:
   title: "Рассчитать стоимость"
   submit: "Отправить заявку"

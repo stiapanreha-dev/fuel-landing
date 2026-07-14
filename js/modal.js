@@ -2,23 +2,19 @@ window.SiteModal = (function () {
   let modalEl = null;
   let formEl = null;
   let successEl = null;
-  let fuelSelect = null;
   let presetFuel = null;
 
   function open(preset) {
     if (!modalEl) return;
     presetFuel = preset || null;
-    resetForm();
-    if (presetFuel && fuelSelect) {
-      fuelSelect.value = presetFuel;
-    }
+    LeadForm.reset(formEl, successEl, presetFuel);
 
     modalEl.hidden = false;
     modalEl.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
     window.SiteNav?.closeMobileMenu();
 
-    const firstInput = formEl?.querySelector('input, select, textarea');
+    const firstInput = formEl?.querySelector('input:not([type="hidden"]):not([name="website"]), select, textarea');
     firstInput?.focus();
   }
 
@@ -27,31 +23,8 @@ window.SiteModal = (function () {
     modalEl.hidden = true;
     modalEl.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
-    resetForm();
-  }
-
-  function resetForm() {
-    if (!formEl || !successEl) return;
-    formEl.reset();
-    formEl.hidden = false;
-    successEl.hidden = true;
-    formEl.querySelectorAll('.is-invalid').forEach((el) => el.classList.remove('is-invalid'));
-    formEl.querySelectorAll('.form-field__error').forEach((el) => {
-      el.textContent = '';
-    });
-    if (presetFuel && fuelSelect) {
-      fuelSelect.value = presetFuel;
-    }
-  }
-
-  function bindForm() {
-    formEl?.addEventListener('submit', (event) => {
-      event.preventDefault();
-      if (!FormRender.validateForm(formEl)) return;
-      formEl.hidden = true;
-      successEl.hidden = false;
-    });
-    FormRender.bindValidation(formEl);
+    LeadForm.reset(formEl, successEl);
+    presetFuel = null;
   }
 
   function bindTriggers() {
@@ -85,17 +58,6 @@ window.SiteModal = (function () {
     formEl = document.getElementById('lead-form');
     successEl = document.getElementById('lead-success');
 
-    const fields = FormRender.syncFuelOptions(
-      JSON.parse(JSON.stringify(content.form_modal?.fields || [])),
-      content.fuel?.types
-    );
-
-    const fieldsHost = document.getElementById('lead-form-fields');
-    if (fieldsHost && fields.length) {
-      fieldsHost.innerHTML = FormRender.renderFields(fields, 'modal');
-      fuelSelect = formEl?.querySelector('[name="fuel"]');
-    }
-
     const titleEl = document.getElementById('lead-modal-title');
     const submitEl = document.getElementById('lead-form-submit');
     const successTextEl = document.getElementById('lead-success-text');
@@ -108,7 +70,14 @@ window.SiteModal = (function () {
         'Спасибо! Заявка успешно отправлена. Менеджер свяжется с вами для уточнения деталей.';
     }
 
-    bindForm();
+    LeadForm.mount(formEl, {
+      prefix: 'modal',
+      fieldsHost: document.getElementById('lead-form-fields'),
+      fields: content.form_modal?.fields || [],
+      successEl,
+      source: 'modal',
+    });
+
     bindTriggers();
   }
 

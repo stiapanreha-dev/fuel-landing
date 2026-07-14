@@ -24,9 +24,12 @@ analytics:
     whatsapp_click: "whatsapp_click"
     telegram_click: "telegram_click"
 
+forms:
+  honeypot_field: "website"
+
 integrations:
   # GitHub Pages не поддерживает серверный код.
-  # Спринт 5: Formspree / Web3Forms / serverless для отправки заявок.
+  # Спринт 5: Formspree / Web3Forms / serverless — указать URL в form_endpoint
   form_endpoint: ""
   telegram_bot_token: ""
   telegram_chat_id: ""

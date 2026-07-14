@@ -1,57 +1,59 @@
-# Контекст проекта — читать первым в новой сессии
+# Контекст — читать первым
 
-> Обновлено: **2026-07-14**, после **спринта 3**
+> После **спринта 4** · 2026-07-14
 
 ---
 
 ## Статус
 
-Весь статический контент лендинга готов (7 блоков + privacy.html). Формы работают на UI-уровне (валидация + success), без отправки на сервер.
+Формы полностью рабочие на клиенте: валидация, UTM, honeypot, согласие. Заявки сохраняются в `localStorage` (`fuel_landing_leads`) до настройки `form_endpoint` в спринте 5.
 
 ---
 
-## Репозиторий
+## Ключевые модули форм
 
-| | |
-|---|---|
-| GitHub | https://github.com/stiapanreha-dev/fuel-landing |
-| Live | https://stiapanreha-dev.github.io/fuel-landing/ |
-| Privacy | https://stiapanreha-dev.github.io/fuel-landing/privacy.html |
-
----
-
-## Где остановились
-
-- **Завершён:** Спринт 3
-- **Следующий:** Спринт 4 — UTM, honeypot, унификация форм
-- **Чекпоинт:** `docs/sprints/sprint-03-checkpoint.md`
+| Файл | Роль |
+|------|------|
+| `js/lead-form.js` | Единая логика обеих форм |
+| `js/utm.js` | UTM из URL |
+| `js/lead-api.js` | submit → endpoint или localStorage |
+| `js/form-render.js` | Поля, валидация, маска телефона |
 
 ---
 
-## Ключевые файлы спринта 3
+## Настройки
 
-| Файл | Назначение |
-|------|------------|
-| `css/bottom-sections.css` | Заказ, доставка, контакты, футер |
-| `js/form-render.js` | Общий рендер полей форм |
-| `js/contacts-form.js` | Встроенная форма §7 |
-| `privacy.html` | Политика + согласие |
-| `config/content.yaml` → `legal` | Тексты legal |
+`config/site.yaml`:
+```yaml
+forms:
+  honeypot_field: website
+integrations:
+  form_endpoint: ""   # спринт 5
+```
 
----
-
-## Две формы на сайте
-
-1. **Модальная** `#lead-modal` — CTA по всему сайту
-2. **Встроенная** `#contacts-form` — финальный блок
-
-Обе используют `FormRender`. Отправка — спринт 5.
+`config/content.yaml` → `form_consent`
 
 ---
 
-## Промпт для продолжения
+## Отладка заявок
+
+```javascript
+JSON.parse(localStorage.getItem('fuel_landing_leads'))
+```
+
+---
+
+## Следующий шаг
+
+**Спринт 5** — подключить `form_endpoint` (Formspree) + Telegram.  
+Чекпоинт: `docs/sprints/sprint-04-checkpoint.md`  
+Инструкция: `docs/INTEGRATIONS.md`
+
+---
+
+## Промпт
 
 ```
-Продолжи fuel-landing. Прочитай docs/CONTEXT.md, sprint-03-checkpoint.md.
-Выполни Спринт 4 по docs/SPRINTS.md.
+Продолжи fuel-landing. Спринт 5: Telegram + Email.
+Прочитай docs/CONTEXT.md, docs/INTEGRATIONS.md, sprint-04-checkpoint.md.
 ```
