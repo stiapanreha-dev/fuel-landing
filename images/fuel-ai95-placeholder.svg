@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" fill="none">
+  <rect width="600" height="360" fill="#e8edf3"/>
+  <rect x="220" y="60" width="160" height="240" rx="16" fill="#1a2b42"/>
+  <rect x="248" y="90" width="104" height="150" rx="8" fill="#d4891a"/>
+  <text x="300" y="330" text-anchor="middle" fill="#1a2b42" font-family="Arial,sans-serif" font-size="24" font-weight="700">АИ-95</text>
+</svg>

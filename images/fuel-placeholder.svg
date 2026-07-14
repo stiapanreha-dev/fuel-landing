@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" fill="none">
+  <rect width="600" height="360" fill="#e8edf3"/>
+  <circle cx="300" cy="170" r="70" fill="#f5a623"/>
+  <text x="300" y="320" text-anchor="middle" fill="#1a2b42" font-family="Arial,sans-serif" font-size="22">Топливо</text>
+</svg>

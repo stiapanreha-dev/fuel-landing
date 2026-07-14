@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" fill="none">
+  <rect width="700" height="400" fill="#dce4ee"/>
+  <ellipse cx="350" cy="300" rx="280" ry="60" fill="#b8c5d6" opacity="0.5"/>
+  <path d="M120 260h380l60-100h80l40 100h-40" stroke="#1a2b42" stroke-width="8" fill="none" stroke-linejoin="round"/>
+  <circle cx="220" cy="280" r="36" fill="#0f1a29" stroke="#f5a623" stroke-width="6"/>
+  <circle cx="500" cy="280" r="36" fill="#0f1a29" stroke="#f5a623" stroke-width="6"/>
+  <text x="350" y="60" text-anchor="middle" fill="#1a2b42" font-family="Arial,sans-serif" font-size="20">Доставка · заглушка</text>
+</svg>

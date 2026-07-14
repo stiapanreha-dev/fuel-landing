@@ -1,0 +1,50 @@
+# Настройки сайта — редактируйте для перезапуска под новый бренд
+# После изменений: сохранить файл → сайт обновится при перезагрузке страницы
+
+company:
+  name: "Название компании"
+  logo: "images/logo-placeholder.svg"
+  inn: "0000000000"
+  ogrn: "0000000000000"
+  legal_address: "г. Москва, юридический адрес будет указан"
+
+contacts:
+  phone: "+7 (900) 000-00-00"
+  phone_raw: "+79000000000"
+  email: "info@example.com"
+  whatsapp: "https://wa.me/79000000000"
+  telegram: "https://t.me/username"
+  work_hours: "Пн–Пт: 9:00–18:00"
+
+analytics:
+  yandex_metrika_id: ""  # ID счётчика — заполнить позже
+  goals:
+    form_submit: "form_submit"
+    phone_click: "phone_click"
+    whatsapp_click: "whatsapp_click"
+    telegram_click: "telegram_click"
+
+integrations:
+  # GitHub Pages не поддерживает серверный код.
+  # Спринт 5: Formspree / Web3Forms / serverless для отправки заявок.
+  form_endpoint: ""
+  telegram_bot_token: ""
+  telegram_chat_id: ""
+
+theme:
+  primary: "#1a2b42"
+  primary_light: "#243a5e"
+  accent: "#f5a623"
+  accent_dark: "#d4891a"
+  white: "#ffffff"
+  text: "#2c3e50"
+  muted: "#6b7c93"
+
+images:
+  hero_bg: "images/hero-placeholder.svg"
+  fuel_default: "images/fuel-placeholder.svg"
+  delivery: "images/delivery-placeholder.svg"
+
+meta:
+  title: "Бензин АИ-92 и АИ-95 с доставкой"
+  description: "Поставка бензина АИ-92 и АИ-95 с доставкой по Москве, Московской области и регионам России."
