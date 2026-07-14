@@ -93,6 +93,10 @@ window.SiteModal = (function () {
       btn.addEventListener('click', () => open());
     });
 
+    document.querySelectorAll('[data-fuel-value]').forEach((btn) => {
+      btn.addEventListener('click', () => open(btn.getAttribute('data-fuel-value')));
+    });
+
     document.querySelectorAll('[data-fuel]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const fuel = btn.getAttribute('data-fuel');
@@ -141,11 +145,22 @@ window.SiteModal = (function () {
       .join('');
   }
 
+  function syncFuelOptions(content) {
+    const fuelField = content.form_modal?.fields?.find((f) => f.name === 'fuel');
+    if (!fuelField || !content.fuel?.types?.length) return;
+
+    fuelField.options = content.fuel.types.map(
+      (t) => t.fuel_select || t.badge || t.name
+    );
+  }
+
   function init(content) {
     modalEl = document.getElementById('lead-modal');
     formEl = document.getElementById('lead-form');
     successEl = document.getElementById('lead-success');
     fuelSelect = formEl?.querySelector('[name="fuel"]');
+
+    syncFuelOptions(content);
 
     const fieldsHost = document.getElementById('lead-form-fields');
     if (fieldsHost && content.form_modal) {

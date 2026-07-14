@@ -2,6 +2,7 @@
   const loadingEl = document.getElementById('loading');
   const appEl = document.getElementById('app');
   const icons = window.SiteIcons;
+  const sectionIcons = window.SectionIcons;
 
   function highlightFuelTitle(title) {
     return title.replace(
@@ -80,60 +81,99 @@
     `;
   }
 
-  function renderSection(id, title, innerHtml) {
+  function sectionHead(title, subtitle) {
+    return `
+      <div class="section-head">
+        <h2 class="section__title">${title}</h2>
+        ${subtitle ? `<p class="section__subtitle">${subtitle}</p>` : ''}
+      </div>`;
+  }
+
+  function renderSection(id, headHtml, innerHtml) {
     const section = document.getElementById(id);
     section.innerHTML = `
       <div class="container">
-        <h2 class="section__title">${title}</h2>
+        ${headHtml}
         ${innerHtml}
       </div>
     `;
   }
 
   function renderAdvantages(content) {
+    const block = content.advantages;
     renderSection(
       'advantages',
-      content.advantages.title,
-      `<div class="grid-3">${content.advantages.items
-        .map((item) => `<article class="card"><h3>${item.title}</h3><p>${item.text}</p></article>`)
-        .join('')}</div>`
-    );
-  }
-
-  function renderFuel(content) {
-    renderSection(
-      'fuel',
-      content.fuel.title,
-      `<div class="grid-2">${content.fuel.types
+      sectionHead(block.title, block.subtitle),
+      `<div class="advantages-grid">${block.items
         .map(
-          (fuel) => `
-          <article class="card">
-            <img src="${fuel.image}" alt="${fuel.name}" loading="lazy" style="margin-bottom:16px;border-radius:12px;">
-            <h3>${fuel.name}</h3>
-            <p>${fuel.description}</p>
-            <p><strong>${content.fuel.price_label}</strong></p>
-            <button class="btn btn--accent" type="button" data-fuel="${fuel.name}">${content.fuel.cta}</button>
+          (item) => `
+          <article class="advantage-card">
+            <div class="advantage-card__icon" aria-hidden="true">${sectionIcons.get(item.icon)}</div>
+            <h3>${item.title}</h3>
+            <p>${item.text}</p>
           </article>`
         )
         .join('')}</div>`
     );
   }
 
+  function renderFuel(content) {
+    const block = content.fuel;
+    renderSection(
+      'fuel',
+      sectionHead(block.title, block.subtitle),
+      `<div class="fuel-grid">${block.types
+        .map(
+          (fuel) => `
+          <article class="fuel-card">
+            <div class="fuel-card__media">
+              <img src="${fuel.image}" alt="${fuel.name}" loading="lazy" width="640" height="400">
+              <span class="fuel-card__badge">${fuel.badge || fuel.name}</span>
+            </div>
+            <div class="fuel-card__body">
+              <h3>${fuel.name}</h3>
+              <p class="fuel-card__desc">${fuel.description}</p>
+              <p class="fuel-card__price">${block.price_label}</p>
+              <button class="btn btn--accent" type="button" data-fuel-value="${fuel.fuel_select || fuel.badge}">${block.cta}</button>
+            </div>
+          </article>`
+        )
+        .join('')}</div>`
+    );
+  }
+
+  function normalizeAudienceItem(item) {
+    if (typeof item === 'string') {
+      return { icon: 'default', label: item };
+    }
+    return item;
+  }
+
   function renderAudience(content) {
+    const block = content.audience;
     renderSection(
       'audience',
-      content.audience.title,
-      `<div class="grid-4">${content.audience.items
-        .map((item) => `<article class="card"><h3>${item}</h3></article>`)
+      sectionHead(block.title, block.subtitle),
+      `<div class="audience-grid">${block.items
+        .map((raw) => {
+          const item = normalizeAudienceItem(raw);
+          return `
+          <article class="audience-card">
+            <div class="audience-card__icon" aria-hidden="true">${sectionIcons.get(item.icon)}</div>
+            <h3>${item.label}</h3>
+          </article>`;
+        })
         .join('')}</div>
-        <p style="margin-top:24px;"><button class="btn btn--accent" type="button" data-open-form>${content.audience.cta}</button></p>`
+        <div class="section-cta">
+          <button class="btn btn--accent" type="button" data-open-form>${block.cta}</button>
+        </div>`
     );
   }
 
   function renderOrder(content) {
     renderSection(
       'order',
-      content.order.title,
+      sectionHead(content.order.title),
       `<div class="grid-4">${content.order.steps
         .map((step, i) => `<article class="card"><h3>${i + 1}. ${step.title}</h3><p>${step.text}</p></article>`)
         .join('')}</div>`
@@ -145,7 +185,7 @@
     const paragraphs = d.text.trim().split(/\n\n+/);
     renderSection(
       'delivery',
-      d.title,
+      sectionHead(d.title),
       `${paragraphs.map((p) => `<p class="section__subtitle">${p}</p>`).join('')}
        <div class="grid-4" style="margin:24px 0;">${d.regions.map((r) => `<article class="card"><h3>${r}</h3></article>`).join('')}</div>
        <img src="${d.image}" alt="Доставка топлива" loading="lazy" style="max-width:480px;border-radius:18px;margin-bottom:24px;">
