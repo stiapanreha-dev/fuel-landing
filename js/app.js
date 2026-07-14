@@ -258,7 +258,7 @@
             <form id="contacts-form" novalidate>
               <div id="contacts-form-fields"></div>
               <button class="btn btn--accent form__submit" type="submit" id="contacts-form-submit">${c.form.submit}</button>
-              <p class="form__note">Заявка сохраняется локально до подключения Telegram/Email (спринт 5)</p>
+              <p class="form__note">Настройте Formspree и Telegram Worker — см. docs/INTEGRATIONS.md</p>
             </form>
             <div id="contacts-success" class="form__success" hidden>
               <div class="form__success-icon" aria-hidden="true">✓</div>
@@ -317,6 +317,12 @@
       window.SiteNav.init(content.menu);
       window.SiteModal.init(content);
       window.ContactsForm.init(content);
+
+      if (LeadApi.isConfigured(site)) {
+        document.querySelectorAll('.form__note').forEach((el) => {
+          el.textContent = 'Заявка будет отправлена менеджеру на email и/или в Telegram';
+        });
+      }
 
       loadingEl.hidden = true;
       appEl.hidden = false;

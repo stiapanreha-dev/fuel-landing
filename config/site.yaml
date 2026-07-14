@@ -28,11 +28,15 @@ forms:
   honeypot_field: "website"
 
 integrations:
-  # GitHub Pages не поддерживает серверный код.
-  # Спринт 5: Formspree / Web3Forms / serverless — указать URL в form_endpoint
-  form_endpoint: ""
-  telegram_bot_token: ""
-  telegram_chat_id: ""
+  # Email — выберите один вариант:
+  email_service: "formspree"   # formspree | web3forms
+  formspree_id: ""             # https://formspree.io → ID формы
+  web3forms_key: ""            # https://web3forms.com → Access Key
+  form_endpoint: ""            # альтернатива: полный URL (legacy)
+
+  # Telegram — URL Cloudflare Worker (см. server/telegram-proxy/)
+  # Токен бота НЕ хранить здесь — только в секретах Worker
+  telegram_proxy_url: ""
 
 theme:
   primary: "#1a2b42"

@@ -1,59 +1,51 @@
 # Контекст — читать первым
 
-> После **спринта 4** · 2026-07-14
+> После **спринта 5** · 2026-07-14
 
 ---
 
 ## Статус
 
-Формы полностью рабочие на клиенте: валидация, UTM, honeypot, согласие. Заявки сохраняются в `localStorage` (`fuel_landing_leads`) до настройки `form_endpoint` в спринте 5.
+Интеграции реализованы в коде. Для живых уведомлений заказчик заполняет:
+
+1. `config/site.yaml` → `formspree_id` (email)
+2. Деплой `server/telegram-proxy/` → `telegram_proxy_url`
 
 ---
 
-## Ключевые модули форм
+## Ключевые файлы
 
-| Файл | Роль |
-|------|------|
-| `js/lead-form.js` | Единая логика обеих форм |
-| `js/utm.js` | UTM из URL |
-| `js/lead-api.js` | submit → endpoint или localStorage |
-| `js/form-render.js` | Поля, валидация, маска телефона |
+| Файл | Назначение |
+|------|------------|
+| `js/lead-api.js` | Email + Telegram parallel submit |
+| `server/telegram-proxy/` | Worker для Telegram |
+| `docs/INTEGRATIONS.md` | Инструкция настройки |
 
 ---
 
-## Настройки
+## config/site.yaml
 
-`config/site.yaml`:
 ```yaml
-forms:
-  honeypot_field: website
 integrations:
-  form_endpoint: ""   # спринт 5
+  email_service: "formspree"
+  formspree_id: ""              # ← заполнить
+  telegram_proxy_url: ""        # ← URL Worker
 ```
 
-`config/content.yaml` → `form_consent`
-
----
-
-## Отладка заявок
-
-```javascript
-JSON.parse(localStorage.getItem('fuel_landing_leads'))
-```
+Секреты Telegram: `wrangler secret put` (не в git).
 
 ---
 
 ## Следующий шаг
 
-**Спринт 5** — подключить `form_endpoint` (Formspree) + Telegram.  
-Чекпоинт: `docs/sprints/sprint-04-checkpoint.md`  
-Инструкция: `docs/INTEGRATIONS.md`
+**Спринт 6** — Яндекс.Метрика, PageSpeed, финальный QA.  
+Чекпоинт: `docs/sprints/sprint-05-checkpoint.md`
 
 ---
 
 ## Промпт
 
 ```
-Продолжи fuel-landing. Спринт 5: Telegram + Email.
-Прочитай docs/CONTEXT.md, docs/INTEGRATIONS.md, sprint-04-checkpoint.md.
+Продолжи fuel-landing. Спринт 6: Метрика, оптимизация, деплой.
+Прочитай docs/CONTEXT.md, sprint-05-checkpoint.md.
 ```
