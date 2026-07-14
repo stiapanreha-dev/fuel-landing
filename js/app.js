@@ -171,25 +171,44 @@
   }
 
   function renderOrder(content) {
+    const block = content.order;
     renderSection(
       'order',
-      sectionHead(content.order.title),
-      `<div class="grid-4">${content.order.steps
-        .map((step, i) => `<article class="card"><h3>${i + 1}. ${step.title}</h3><p>${step.text}</p></article>`)
+      sectionHead(block.title, block.subtitle),
+      `<div class="steps">${block.steps
+        .map(
+          (step, i) => `
+          <article class="step-card">
+            <div class="step-card__num" aria-hidden="true">${i + 1}</div>
+            <div>
+              <h3>${step.title}</h3>
+              <p>${step.text}</p>
+            </div>
+          </article>`
+        )
         .join('')}</div>`
     );
   }
 
-  function renderDelivery(site, content) {
+  function renderDelivery(content) {
     const d = content.delivery;
     const paragraphs = d.text.trim().split(/\n\n+/);
     renderSection(
       'delivery',
-      sectionHead(d.title),
-      `${paragraphs.map((p) => `<p class="section__subtitle">${p}</p>`).join('')}
-       <div class="grid-4" style="margin:24px 0;">${d.regions.map((r) => `<article class="card"><h3>${r}</h3></article>`).join('')}</div>
-       <img src="${d.image}" alt="Доставка топлива" loading="lazy" style="max-width:480px;border-radius:18px;margin-bottom:24px;">
-       <button class="btn btn--accent" type="button" data-open-form>${d.cta}</button>`
+      sectionHead(d.title, d.subtitle),
+      `<div class="delivery-layout">
+        <div class="delivery-layout__text">
+          ${paragraphs.map((p) => `<p class="section__subtitle">${p}</p>`).join('')}
+          <div class="delivery-regions">
+            ${d.regions.map((r) => `<div class="delivery-region">${r}</div>`).join('')}
+          </div>
+          <button class="btn btn--accent" type="button" data-open-form>${d.cta}</button>
+        </div>
+        <div class="delivery-visual">
+          <img src="${d.map_image || d.image}" alt="География доставки по России" loading="lazy" width="560" height="320">
+          <img src="${d.image}" alt="Доставка топлива бензовозом" loading="lazy" width="560" height="320">
+        </div>
+      </div>`
     );
   }
 
@@ -198,19 +217,54 @@
     const section = document.getElementById('contacts');
     section.innerHTML = `
       <div class="container">
-        <h2 class="section__title">${c.title}</h2>
-        <p class="section__subtitle">${c.subtitle}</p>
-        <div class="grid-2">
-          <div class="card" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:#fff;">
-            <p><strong>Телефон:</strong> <a href="tel:${site.contacts.phone_raw}" style="color:#fff;">${site.contacts.phone}</a></p>
-            <p><strong>Email:</strong> <a href="mailto:${site.contacts.email}" style="color:#fff;">${site.contacts.email}</a></p>
-            <p><strong>WhatsApp:</strong> <a href="${site.contacts.whatsapp}" target="_blank" rel="noopener" style="color:#fff;">Написать</a></p>
-            <p><strong>Telegram:</strong> <a href="${site.contacts.telegram}" target="_blank" rel="noopener" style="color:#fff;">Написать</a></p>
-            <p><strong>Режим работы:</strong> ${site.contacts.work_hours}</p>
+        ${sectionHead(c.title, c.subtitle)}
+        <div class="contacts-layout">
+          <div class="contacts-info">
+            <div class="contacts-info__item">
+              <div class="contacts-info__icon" aria-hidden="true">📞</div>
+              <div>
+                <div class="contacts-info__label">Телефон</div>
+                <div class="contacts-info__value"><a href="tel:${site.contacts.phone_raw}">${site.contacts.phone}</a></div>
+              </div>
+            </div>
+            <div class="contacts-info__item">
+              <div class="contacts-info__icon" aria-hidden="true">✉️</div>
+              <div>
+                <div class="contacts-info__label">Email</div>
+                <div class="contacts-info__value"><a href="mailto:${site.contacts.email}">${site.contacts.email}</a></div>
+              </div>
+            </div>
+            <div class="contacts-info__item">
+              <div class="contacts-info__icon" aria-hidden="true">💬</div>
+              <div>
+                <div class="contacts-info__label">Мессенджеры</div>
+                <div class="contacts-info__value">
+                  <a href="${site.contacts.whatsapp}" target="_blank" rel="noopener">WhatsApp</a> ·
+                  <a href="${site.contacts.telegram}" target="_blank" rel="noopener">Telegram</a>
+                </div>
+              </div>
+            </div>
+            <div class="contacts-info__item">
+              <div class="contacts-info__icon" aria-hidden="true">🕐</div>
+              <div>
+                <div class="contacts-info__label">Режим работы</div>
+                <div class="contacts-info__value">${site.contacts.work_hours}</div>
+              </div>
+            </div>
           </div>
-          <div class="card" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:#fff;">
-            <p style="margin-bottom:16px;">Оставьте заявку — рассчитаем стоимость топлива и доставки.</p>
-            <button class="btn btn--accent" type="button" data-open-form>${c.form.submit}</button>
+          <div class="contacts-form-card">
+            <h3 class="modal__title">${c.form.submit}</h3>
+            <p class="modal__subtitle" style="margin-bottom:20px;">Заполните форму — перезвоним для расчёта</p>
+            <form id="contacts-form" novalidate>
+              <div id="contacts-form-fields"></div>
+              <button class="btn btn--accent form__submit" type="submit" id="contacts-form-submit">${c.form.submit}</button>
+              <p class="form__note">Отправка на сервер — спринт 5</p>
+            </form>
+            <div id="contacts-success" class="form__success" hidden>
+              <div class="form__success-icon" aria-hidden="true">✓</div>
+              <h3 class="modal__title">Заявка принята</h3>
+              <p data-success-text></p>
+            </div>
           </div>
         </div>
       </div>
@@ -218,16 +272,27 @@
   }
 
   function renderFooter(site, content) {
+    const f = content.footer;
+    const year = new Date().getFullYear();
     const footer = document.getElementById('footer');
     footer.innerHTML = `
-      <div class="container footer__grid">
-        <p><strong data-company-name>${site.company.name}</strong></p>
-        <p>ИНН: ${site.company.inn} · ОГРН: ${site.company.ogrn}</p>
-        <p>${site.company.legal_address}</p>
-        <p>
-          <a href="#">${content.footer.privacy_text}</a> ·
-          <a href="#">${content.footer.consent_text}</a>
-        </p>
+      <div class="container">
+        <div class="footer__inner">
+          <div>
+            <div class="footer__brand" data-company-name>${site.company.name}</div>
+            <div class="footer__meta">
+              <span>ИНН: ${site.company.inn}</span>
+              <span>ОГРН: ${site.company.ogrn}</span>
+              <span>${site.company.legal_address}</span>
+            </div>
+          </div>
+          <div class="footer__links">
+            <a href="${f.privacy_url || 'privacy.html'}">${f.privacy_text}</a>
+            <a href="${f.consent_url || 'privacy.html#consent'}">${f.consent_text}</a>
+            <a href="index.html#contacts">Контакты</a>
+          </div>
+        </div>
+        <p class="footer__copy">© ${year} ${site.company.name}. Все права защищены.</p>
       </div>
     `;
   }
@@ -242,12 +307,13 @@
       renderFuel(content);
       renderAudience(content);
       renderOrder(content);
-      renderDelivery(site, content);
+      renderDelivery(content);
       renderContacts(site, content);
       renderFooter(site, content);
 
       window.SiteNav.init(content.menu);
       window.SiteModal.init(content);
+      window.ContactsForm.init(content);
 
       loadingEl.hidden = true;
       appEl.hidden = false;

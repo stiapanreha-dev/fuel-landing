@@ -1,12 +1,12 @@
 # Контекст проекта — читать первым в новой сессии
 
-> Обновлено: **2026-07-14**, после **спринта 2**
+> Обновлено: **2026-07-14**, после **спринта 3**
 
 ---
 
-## Проект в одном абзаце
+## Статус
 
-Лендинг бензина АИ-92/АИ-95 на GitHub Pages. Статика + YAML. Завершены спринты 0–2: Hero, навигация, модалка, блоки преимуществ, топлива и аудитории.
+Весь статический контент лендинга готов (7 блоков + privacy.html). Формы работают на UI-уровне (валидация + success), без отправки на сервер.
 
 ---
 
@@ -16,37 +16,42 @@
 |---|---|
 | GitHub | https://github.com/stiapanreha-dev/fuel-landing |
 | Live | https://stiapanreha-dev.github.io/fuel-landing/ |
-| Локально | `python3 -m http.server 8080` |
+| Privacy | https://stiapanreha-dev.github.io/fuel-landing/privacy.html |
 
 ---
 
 ## Где остановились
 
-- **Завершён:** Спринт 2
-- **Следующий:** Спринт 3 — заказ, доставка, футер
-- **Чекпоинт:** `docs/sprints/sprint-02-checkpoint.md`
+- **Завершён:** Спринт 3
+- **Следующий:** Спринт 4 — UTM, honeypot, унификация форм
+- **Чекпоинт:** `docs/sprints/sprint-03-checkpoint.md`
 
 ---
 
-## Ключевые файлы спринта 2
+## Ключевые файлы спринта 3
 
 | Файл | Назначение |
 |------|------------|
-| `css/sections.css` | Карточки преимуществ, топлива, аудитории |
-| `js/section-icons.js` | Иконки секций |
-| `config/content.yaml` | `fuel_select`, `audience.items[{icon,label}]` |
+| `css/bottom-sections.css` | Заказ, доставка, контакты, футер |
+| `js/form-render.js` | Общий рендер полей форм |
+| `js/contacts-form.js` | Встроенная форма §7 |
+| `privacy.html` | Политика + согласие |
+| `config/content.yaml` → `legal` | Тексты legal |
 
 ---
 
-## Добавить топливо (без правки кода)
+## Две формы на сайте
 
-Добавить запись в `config/content.yaml` → `fuel.types[]` с полями `badge`, `fuel_select`, `image`.
+1. **Модальная** `#lead-modal` — CTA по всему сайту
+2. **Встроенная** `#contacts-form` — финальный блок
+
+Обе используют `FormRender`. Отправка — спринт 5.
 
 ---
 
 ## Промпт для продолжения
 
 ```
-Продолжи fuel-landing. Прочитай docs/CONTEXT.md, sprint-02-checkpoint.md.
-Выполни Спринт 3 по docs/SPRINTS.md. Референс: docs/TZ.md.
+Продолжи fuel-landing. Прочитай docs/CONTEXT.md, sprint-03-checkpoint.md.
+Выполни Спринт 4 по docs/SPRINTS.md.
 ```

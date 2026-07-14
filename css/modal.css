@@ -75,6 +75,11 @@
   margin-bottom: 6px;
 }
 
+.form-field textarea {
+  resize: vertical;
+  min-height: 88px;
+}
+
 .form-field input,
 .form-field select,
 .form-field textarea {

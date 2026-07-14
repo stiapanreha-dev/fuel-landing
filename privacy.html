@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Политика конфиденциальности</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <style>
+    body { background: var(--color-bg); }
+    .legal-page { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; }
+    .legal-page h1 { font-size: 32px; color: var(--color-primary); margin-bottom: 12px; }
+    .legal-page h2 { font-size: 20px; color: var(--color-primary); margin: 32px 0 12px; }
+    .legal-page p { color: var(--color-muted); line-height: 1.7; margin-bottom: 12px; }
+    .legal-back { display: inline-flex; margin-bottom: 28px; color: var(--color-primary); text-decoration: none; font-weight: 600; }
+    .legal-back:hover { color: var(--color-accent-dark); }
+    .legal-meta { font-size: 14px; color: var(--color-muted); margin-bottom: 32px; }
+    #consent { scroll-margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--color-border); margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <div class="legal-page">
+    <a class="legal-back" href="index.html">← На главную</a>
+    <h1 id="privacy-title">Политика конфиденциальности</h1>
+    <p class="legal-meta" id="company-line">Загрузка…</p>
+    <div id="privacy-sections"></div>
+    <section id="consent">
+      <h2 id="consent-title">Согласие на обработку персональных данных</h2>
+      <p id="consent-text"></p>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
+  <script src="js/config-loader.js"></script>
+  <script>
+    (async function () {
+      try {
+        const [site, content] = await Promise.all([
+          SiteConfig.fetchYaml('config/site.yaml'),
+          SiteConfig.fetchYaml('config/content.yaml'),
+        ]);
+        const legal = content.legal || {};
+
+        document.title = `${legal.privacy_title || 'Политика'} — ${site.company.name}`;
+        document.getElementById('privacy-title').textContent = legal.privacy_title || 'Политика конфиденциальности';
+        document.getElementById('consent-title').textContent = legal.consent_title || 'Согласие на обработку персональных данных';
+        document.getElementById('company-line').textContent = `${site.company.name} · ИНН ${site.company.inn} · ${site.company.legal_address}`;
+
+        const host = document.getElementById('privacy-sections');
+        host.innerHTML = (legal.privacy_sections || [])
+          .map((s) => `<h2>${s.title}</h2><p>${s.text}</p>`)
+          .join('');
+
+        const consentText = (legal.consent_text || '').trim().split(/\n\n+/);
+        document.getElementById('consent-text').innerHTML = consentText.map((p) => `<p>${p}</p>`).join('');
+      } catch (e) {
+        document.getElementById('company-line').textContent = 'Ошибка загрузки: ' + e.message;
+      }
+    })();
+  </script>
+</body>
+</html>

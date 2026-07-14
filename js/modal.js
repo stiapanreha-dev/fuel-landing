@@ -44,48 +44,14 @@ window.SiteModal = (function () {
     }
   }
 
-  function validateForm() {
-    let valid = true;
-    const required = formEl.querySelectorAll('[required]');
-
-    required.forEach((field) => {
-      const wrapper = field.closest('.form-field');
-      const errorEl = wrapper?.querySelector('.form-field__error');
-      const value = field.value.trim();
-
-      if (!value) {
-        valid = false;
-        field.classList.add('is-invalid');
-        if (errorEl) errorEl.textContent = 'Обязательное поле';
-      } else if (field.type === 'tel' && value.replace(/\D/g, '').length < 10) {
-        valid = false;
-        field.classList.add('is-invalid');
-        if (errorEl) errorEl.textContent = 'Введите корректный телефон';
-      } else {
-        field.classList.remove('is-invalid');
-        if (errorEl) errorEl.textContent = '';
-      }
-    });
-
-    return valid;
-  }
-
   function bindForm() {
     formEl?.addEventListener('submit', (event) => {
       event.preventDefault();
-      if (!validateForm()) return;
-
+      if (!FormRender.validateForm(formEl)) return;
       formEl.hidden = true;
       successEl.hidden = false;
     });
-
-    formEl?.querySelectorAll('input, select, textarea').forEach((field) => {
-      field.addEventListener('input', () => {
-        field.classList.remove('is-invalid');
-        const errorEl = field.closest('.form-field')?.querySelector('.form-field__error');
-        if (errorEl) errorEl.textContent = '';
-      });
-    });
+    FormRender.bindValidation(formEl);
   }
 
   function bindTriggers() {
@@ -114,57 +80,19 @@ window.SiteModal = (function () {
     });
   }
 
-  function renderFields(formConfig) {
-    return formConfig.fields
-      .map((field) => {
-        const required = field.required ? 'required' : '';
-        const reqMark = field.required ? ' <span aria-hidden="true">*</span>' : '';
-
-        if (field.type === 'select') {
-          const options = field.options
-            .map((opt) => `<option value="${opt}">${opt}</option>`)
-            .join('');
-          return `
-            <div class="form-field">
-              <label for="modal-${field.name}">${field.label}${reqMark}</label>
-              <select id="modal-${field.name}" name="${field.name}" ${required}>
-                <option value="">Выберите…</option>
-                ${options}
-              </select>
-              <div class="form-field__error"></div>
-            </div>`;
-        }
-
-        return `
-          <div class="form-field">
-            <label for="modal-${field.name}">${field.label}${reqMark}</label>
-            <input type="${field.type}" id="modal-${field.name}" name="${field.name}" ${required}>
-            <div class="form-field__error"></div>
-          </div>`;
-      })
-      .join('');
-  }
-
-  function syncFuelOptions(content) {
-    const fuelField = content.form_modal?.fields?.find((f) => f.name === 'fuel');
-    if (!fuelField || !content.fuel?.types?.length) return;
-
-    fuelField.options = content.fuel.types.map(
-      (t) => t.fuel_select || t.badge || t.name
-    );
-  }
-
   function init(content) {
     modalEl = document.getElementById('lead-modal');
     formEl = document.getElementById('lead-form');
     successEl = document.getElementById('lead-success');
-    fuelSelect = formEl?.querySelector('[name="fuel"]');
 
-    syncFuelOptions(content);
+    const fields = FormRender.syncFuelOptions(
+      JSON.parse(JSON.stringify(content.form_modal?.fields || [])),
+      content.fuel?.types
+    );
 
     const fieldsHost = document.getElementById('lead-form-fields');
-    if (fieldsHost && content.form_modal) {
-      fieldsHost.innerHTML = renderFields(content.form_modal);
+    if (fieldsHost && fields.length) {
+      fieldsHost.innerHTML = FormRender.renderFields(fields, 'modal');
       fuelSelect = formEl?.querySelector('[name="fuel"]');
     }
 
