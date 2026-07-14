@@ -3,6 +3,10 @@ const CONFIG_PATHS = {
   content: 'config/content.yaml',
 };
 
+function resolvePath(path) {
+  return window.SiteBase?.asset(path) || path;
+}
+
 function ensureYamlParser() {
   if (typeof jsyaml === 'undefined') {
     throw new Error(
@@ -13,7 +17,7 @@ function ensureYamlParser() {
 
 async function fetchYaml(path) {
   ensureYamlParser();
-  const response = await fetch(path);
+  const response = await fetch(resolvePath(path));
   if (!response.ok) {
     throw new Error(`Не удалось загрузить ${path}: ${response.status}`);
   }

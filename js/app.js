@@ -4,10 +4,7 @@
   const icons = window.SiteIcons;
   const sectionIcons = window.SectionIcons;
 
-  function assetUrl(path) {
-    if (!path || /^https?:\/\//.test(path) || path.startsWith('/')) return path;
-    return `/${path.replace(/^\.\//, '')}`;
-  }
+  const assetUrl = (path) => window.SiteBase.asset(path);
 
   function highlightFuelTitle(title) {
     return title.replace(
