@@ -48,9 +48,9 @@ theme:
   muted: "#6b7c93"
 
 images:
-  hero_bg: "images/hero-placeholder.svg"
-  fuel_default: "images/fuel-placeholder.svg"
-  delivery: "images/delivery-placeholder.svg"
+  hero_bg: "images/hero.jpg"
+  fuel_default: "images/fuel-ai92.jpg"
+  delivery: "images/delivery.jpg"
 
 meta:
   title: "Бензин АИ-92 и АИ-95 с доставкой"

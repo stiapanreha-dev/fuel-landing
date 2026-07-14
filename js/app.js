@@ -4,6 +4,11 @@
   const icons = window.SiteIcons;
   const sectionIcons = window.SectionIcons;
 
+  function assetUrl(path) {
+    if (!path || /^https?:\/\//.test(path) || path.startsWith('/')) return path;
+    return `/${path.replace(/^\.\//, '')}`;
+  }
+
   function highlightFuelTitle(title) {
     return title.replace(
       /АИ-92 и АИ-95/,
@@ -22,7 +27,7 @@
     header.innerHTML = `
       <div class="container header__inner">
         <a href="#hero" class="header__brand">
-          <img src="${site.company.logo}" alt="${site.company.name}">
+          <img src="${assetUrl(site.company.logo)}" alt="${site.company.name}">
           <span data-company-name>${site.company.name}</span>
         </a>
         <nav class="nav nav--desktop" aria-label="Основное меню">${menuLinks}</nav>
@@ -51,7 +56,7 @@
   function renderHero(site, content) {
     const hero = content.hero;
     const section = document.getElementById('hero');
-    section.style.setProperty('--hero-bg', `url('${site.images.hero_bg}')`);
+    section.style.setProperty('--hero-bg', `url('${assetUrl(site.images.hero_bg)}')`);
 
     section.innerHTML = `
       <div class="hero__bg" aria-hidden="true"></div>
@@ -68,7 +73,7 @@
           </div>
         </div>
         <div class="hero__visual">
-          <img src="${site.images.hero_bg}" alt="Доставка бензина бензовозом" loading="eager" width="640" height="480">
+          <img src="${assetUrl(site.images.hero_bg)}" alt="Доставка бензина бензовозом" loading="eager" width="640" height="480">
         </div>
       </div>
       <div class="hero__trust">
@@ -127,7 +132,7 @@
           (fuel) => `
           <article class="fuel-card">
             <div class="fuel-card__media">
-              <img src="${fuel.image}" alt="${fuel.name}" loading="lazy" width="640" height="400">
+              <img src="${assetUrl(fuel.image)}" alt="${fuel.name}" loading="lazy" width="640" height="400">
               <span class="fuel-card__badge">${fuel.badge || fuel.name}</span>
             </div>
             <div class="fuel-card__body">
@@ -205,8 +210,8 @@
           <button class="btn btn--accent" type="button" data-open-form>${d.cta}</button>
         </div>
         <div class="delivery-visual">
-          <img src="${d.map_image || d.image}" alt="География доставки по России" loading="lazy" width="560" height="320">
-          <img src="${d.image}" alt="Доставка топлива бензовозом" loading="lazy" width="560" height="320">
+          <img src="${assetUrl(d.map_image || d.image)}" alt="География доставки по России" loading="lazy" width="560" height="320">
+          <img src="${assetUrl(d.image)}" alt="Доставка топлива бензовозом" loading="lazy" width="560" height="320">
         </div>
       </div>`
     );
@@ -258,7 +263,7 @@
             <form id="contacts-form" novalidate>
               <div id="contacts-form-fields"></div>
               <button class="btn btn--accent form__submit" type="submit" id="contacts-form-submit">${c.form.submit}</button>
-              <p class="form__note">Настройте Formspree и Telegram Worker — см. docs/INTEGRATIONS.md</p>
+              <p class="form__note">Менеджер свяжется с вами для расчёта стоимости</p>
             </form>
             <div id="contacts-success" class="form__success" hidden>
               <div class="form__success-icon" aria-hidden="true">✓</div>
@@ -318,11 +323,11 @@
       window.SiteModal.init(content);
       window.ContactsForm.init(content);
 
-      if (LeadApi.isConfigured(site)) {
-        document.querySelectorAll('.form__note').forEach((el) => {
-          el.textContent = 'Заявка будет отправлена менеджеру на email и/или в Telegram';
-        });
-      }
+      document.querySelectorAll('.form__note').forEach((el) => {
+        el.textContent = LeadApi.isConfigured(site)
+          ? 'Заявка будет отправлена менеджеру — ответим в рабочее время'
+          : 'Менеджер свяжется с вами для расчёта стоимости';
+      });
 
       loadingEl.hidden = true;
       appEl.hidden = false;

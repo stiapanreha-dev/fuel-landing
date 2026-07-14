@@ -3,7 +3,16 @@ const CONFIG_PATHS = {
   content: 'config/content.yaml',
 };
 
+function ensureYamlParser() {
+  if (typeof jsyaml === 'undefined') {
+    throw new Error(
+      'Библиотека js-yaml не загружена. Откройте сайт через http://localhost:8080/, а не file://'
+    );
+  }
+}
+
 async function fetchYaml(path) {
+  ensureYamlParser();
   const response = await fetch(path);
   if (!response.ok) {
     throw new Error(`Не удалось загрузить ${path}: ${response.status}`);

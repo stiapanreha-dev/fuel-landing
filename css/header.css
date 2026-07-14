@@ -9,10 +9,10 @@
 
 .header__inner {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 24px;
-  min-height: 72px;
+  gap: 20px;
+  min-height: 68px;
 }
 
 .header__brand {
@@ -33,7 +33,7 @@
 }
 
 .header__brand span {
-  max-width: 180px;
+  max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -41,17 +41,20 @@
 .nav--desktop {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 
 .nav a {
   color: rgba(255, 255, 255, 0.82);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  padding: 8px 12px;
+  padding: 7px 10px;
   border-radius: 999px;
+  white-space: nowrap;
   transition: color 0.2s, background 0.2s;
 }
 
@@ -71,7 +74,7 @@
   color: var(--color-white);
   text-decoration: none;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   white-space: nowrap;
 }
 
@@ -80,11 +83,12 @@
 }
 
 .btn--icon {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   padding: 0;
   border-radius: 50%;
   font-size: 0;
+  flex-shrink: 0;
 }
 
 .btn--icon svg {
@@ -187,7 +191,7 @@
   gap: 10px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1140px) {
   .header__inner {
     grid-template-columns: 1fr auto;
   }
@@ -202,6 +206,21 @@
 
   .burger {
     display: flex;
+  }
+}
+
+@media (min-width: 1141px) and (max-width: 1280px) {
+  .header__brand span {
+    max-width: 120px;
+  }
+
+  .nav a {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  .header__phone {
+    font-size: 12px;
   }
 }
 

@@ -163,9 +163,35 @@
 .contacts-form-card {
   background: var(--color-white);
   border-radius: var(--radius-lg);
-  padding: 32px 28px;
+  padding: 28px 32px;
   color: var(--color-text);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.contacts-form-card .form-fields-grid .form-field:nth-child(n + 5) {
+  grid-column: 1 / -1;
+}
+
+.contacts-form-card .form-field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.contacts-form-card .form-field select,
+.contacts-form-card .form-field textarea {
+  padding: 9px 12px;
+  font-size: 14px;
+}
+
+.contacts-form-card .form-field--consent {
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.contacts-form-card .form-field.form-field--consent > label.form-consent {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  font-weight: 400;
+  margin-bottom: 0;
+  line-height: 1.45;
 }
 
 .contacts-form-card .modal__title {

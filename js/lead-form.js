@@ -126,7 +126,9 @@ window.LeadForm = (function () {
     );
 
     if (fieldsHost && fields.length) {
-      fieldsHost.innerHTML = FormRender.renderFields(fields, prefix) + renderExtras(prefix);
+      fieldsHost.innerHTML =
+        `<div class="form-fields-grid">${FormRender.renderFields(fields, prefix)}</div>` +
+        `<div class="form-extras">${renderExtras(prefix)}</div>`;
     } else if (options.appendExtras) {
       const wrapper = document.createElement('div');
       wrapper.innerHTML = renderExtras(prefix);

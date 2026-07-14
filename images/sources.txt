@@ -1,0 +1,9 @@
+Stock images (free licenses):
+
+hero.jpg — Truck on highway (Unsplash)
+fuel-ai92.jpg — MA.SS. filling station (Wikimedia Commons, CC BY-SA 4.0)
+fuel-ai95.jpg — Orlen gasoline pump (Wikimedia Commons, CC BY-SA 4.0)
+delivery.jpg — Rotten Robbie tanker truck (Wikimedia Commons, CC BY-SA 4.0)
+map-russia.jpg — Russia relief location map (Wikimedia Commons, CC BY-SA 3.0)
+
+Replace with client photos before production launch.
