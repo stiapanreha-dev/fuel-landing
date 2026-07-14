@@ -1,18 +1,22 @@
 (function () {
   const loadingEl = document.getElementById('loading');
   const appEl = document.getElementById('app');
+  const icons = window.SiteIcons;
 
-  function el(tag, className, html) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (html != null) node.innerHTML = html;
-    return node;
+  function highlightFuelTitle(title) {
+    return title.replace(
+      /АИ-92 и АИ-95/,
+      '<em>АИ-92 и АИ-95</em>'
+    );
   }
 
   function renderHeader(site, content) {
     const header = document.getElementById('header');
     const phone = site.contacts?.phone || '';
     const phoneRaw = site.contacts?.phone_raw || phone;
+    const menuLinks = content.menu
+      .map((item) => `<a href="#${item.id}">${item.label}</a>`)
+      .join('');
 
     header.innerHTML = `
       <div class="container header__inner">
@@ -20,13 +24,24 @@
           <img src="${site.company.logo}" alt="${site.company.name}">
           <span data-company-name>${site.company.name}</span>
         </a>
-        <nav class="nav" aria-label="Основное меню">
-          ${content.menu.map((item) => `<a href="#${item.id}">${item.label}</a>`).join('')}
-        </nav>
-        <div class="header__contacts">
+        <nav class="nav nav--desktop" aria-label="Основное меню">${menuLinks}</nav>
+        <div class="header__actions">
+          <a class="header__phone" href="tel:${phoneRaw}" data-track="phone">${phone}</a>
+          <a class="btn btn--icon btn--wa" href="${site.contacts.whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp" data-track="whatsapp">${icons.whatsapp}</a>
+          <a class="btn btn--icon btn--tg" href="${site.contacts.telegram}" target="_blank" rel="noopener" aria-label="Telegram" data-track="telegram">${icons.telegram}</a>
+          <button class="burger" type="button" data-burger aria-label="Меню" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+      <div class="mobile-menu" data-mobile-menu>
+        <nav class="nav" aria-label="Мобильное меню">${menuLinks}</nav>
+        <div class="mobile-menu__contacts">
           <a class="header__phone" href="tel:${phoneRaw}">${phone}</a>
-          <a class="btn btn--ghost" href="${site.contacts.whatsapp}" target="_blank" rel="noopener">WhatsApp</a>
-          <a class="btn btn--ghost" href="${site.contacts.telegram}" target="_blank" rel="noopener">Telegram</a>
+          <div class="mobile-menu__row">
+            <a class="btn btn--icon btn--wa" href="${site.contacts.whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp">${icons.whatsapp}</a>
+            <a class="btn btn--icon btn--tg" href="${site.contacts.telegram}" target="_blank" rel="noopener" aria-label="Telegram">${icons.telegram}</a>
+          </div>
         </div>
       </div>
     `;
@@ -38,18 +53,28 @@
     section.style.setProperty('--hero-bg', `url('${site.images.hero_bg}')`);
 
     section.innerHTML = `
+      <div class="hero__bg" aria-hidden="true"></div>
       <div class="container hero__grid">
-        <div>
-          <h1 class="section__title">${hero.title}</h1>
-          <p class="section__subtitle">${hero.subtitle}</p>
+        <div class="hero__content">
+          <span class="hero__eyebrow">${hero.eyebrow || 'Поставка топлива'}</span>
+          <h1 class="hero__title">${highlightFuelTitle(hero.title)}</h1>
+          <p class="hero__subtitle">${hero.subtitle}</p>
           <ul class="hero__benefits">
             ${hero.benefits.map((b) => `<li>${b}</li>`).join('')}
           </ul>
-          <button class="btn btn--accent" type="button" data-open-form>${hero.cta}</button>
-          <p class="placeholder-note">Спринт 1–4: полная вёрстка, модальная форма и отправка заявок.</p>
+          <div class="hero__cta-row">
+            <button class="btn btn--accent" type="button" data-open-form>${hero.cta}</button>
+          </div>
         </div>
-        <div>
-          <img src="${site.images.hero_bg}" alt="Доставка топлива" style="border-radius: 18px; box-shadow: var(--shadow);">
+        <div class="hero__visual">
+          <img src="${site.images.hero_bg}" alt="Доставка бензина бензовозом" loading="eager" width="640" height="480">
+        </div>
+      </div>
+      <div class="hero__trust">
+        <div class="container hero__trust-grid">
+          ${hero.benefits
+            .map((b) => `<div class="hero__trust-item">${b}</div>`)
+            .join('')}
         </div>
       </div>
     `;
@@ -83,7 +108,7 @@
         .map(
           (fuel) => `
           <article class="card">
-            <img src="${fuel.image}" alt="${fuel.name}" style="margin-bottom:16px;border-radius:12px;">
+            <img src="${fuel.image}" alt="${fuel.name}" loading="lazy" style="margin-bottom:16px;border-radius:12px;">
             <h3>${fuel.name}</h3>
             <p>${fuel.description}</p>
             <p><strong>${content.fuel.price_label}</strong></p>
@@ -117,12 +142,13 @@
 
   function renderDelivery(site, content) {
     const d = content.delivery;
+    const paragraphs = d.text.trim().split(/\n\n+/);
     renderSection(
       'delivery',
       d.title,
-      `<p class="section__subtitle">${d.text.replace(/\n\n/g, '</p><p class="section__subtitle">')}</p>
+      `${paragraphs.map((p) => `<p class="section__subtitle">${p}</p>`).join('')}
        <div class="grid-4" style="margin:24px 0;">${d.regions.map((r) => `<article class="card"><h3>${r}</h3></article>`).join('')}</div>
-       <img src="${d.image}" alt="Доставка" style="max-width:480px;border-radius:18px;margin-bottom:24px;">
+       <img src="${d.image}" alt="Доставка топлива" loading="lazy" style="max-width:480px;border-radius:18px;margin-bottom:24px;">
        <button class="btn btn--accent" type="button" data-open-form>${d.cta}</button>`
     );
   }
@@ -136,13 +162,14 @@
         <p class="section__subtitle">${c.subtitle}</p>
         <div class="grid-2">
           <div class="card" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:#fff;">
-            <p><strong>Телефон:</strong> <a href="tel:${site.contacts.phone_raw}">${site.contacts.phone}</a></p>
-            <p><strong>Email:</strong> <a href="mailto:${site.contacts.email}">${site.contacts.email}</a></p>
+            <p><strong>Телефон:</strong> <a href="tel:${site.contacts.phone_raw}" style="color:#fff;">${site.contacts.phone}</a></p>
+            <p><strong>Email:</strong> <a href="mailto:${site.contacts.email}" style="color:#fff;">${site.contacts.email}</a></p>
+            <p><strong>WhatsApp:</strong> <a href="${site.contacts.whatsapp}" target="_blank" rel="noopener" style="color:#fff;">Написать</a></p>
+            <p><strong>Telegram:</strong> <a href="${site.contacts.telegram}" target="_blank" rel="noopener" style="color:#fff;">Написать</a></p>
             <p><strong>Режим работы:</strong> ${site.contacts.work_hours}</p>
-            <p class="placeholder-note">Форма заявки — спринт 4. Интеграции — спринт 5.</p>
           </div>
           <div class="card" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:#fff;">
-            <p>Финальная форма с полями: ${c.form.fields.map((f) => f.label).join(', ')}.</p>
+            <p style="margin-bottom:16px;">Оставьте заявку — рассчитаем стоимость топлива и доставки.</p>
             <button class="btn btn--accent" type="button" data-open-form>${c.form.submit}</button>
           </div>
         </div>
@@ -158,24 +185,17 @@
         <p>ИНН: ${site.company.inn} · ОГРН: ${site.company.ogrn}</p>
         <p>${site.company.legal_address}</p>
         <p>
-          <a href="#" style="color:inherit;">${content.footer.privacy_text}</a> ·
-          <a href="#" style="color:inherit;">${content.footer.consent_text}</a>
+          <a href="#">${content.footer.privacy_text}</a> ·
+          <a href="#">${content.footer.consent_text}</a>
         </p>
       </div>
     `;
   }
 
-  function bindCtaButtons() {
-    document.querySelectorAll('[data-open-form], [data-fuel]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        alert('Форма заявки будет подключена в спринте 4.');
-      });
-    });
-  }
-
   async function init() {
     try {
       const { site, content } = await window.SiteConfig.loadConfig();
+
       renderHeader(site, content);
       renderHero(site, content);
       renderAdvantages(content);
@@ -185,7 +205,9 @@
       renderDelivery(site, content);
       renderContacts(site, content);
       renderFooter(site, content);
-      bindCtaButtons();
+
+      window.SiteNav.init(content.menu);
+      window.SiteModal.init(content);
 
       loadingEl.hidden = true;
       appEl.hidden = false;

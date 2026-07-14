@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/modal.css">
 </head>
 <body>
   <div id="loading" class="loading-screen">Загрузка…</div>
@@ -30,8 +33,31 @@
     <footer class="footer" id="footer"></footer>
   </div>
 
+  <div id="lead-modal" class="modal" hidden aria-hidden="true" role="dialog" aria-labelledby="lead-modal-title">
+    <div class="modal__backdrop" data-close-modal></div>
+    <div class="modal__dialog">
+      <button class="modal__close" type="button" data-close-modal aria-label="Закрыть">&times;</button>
+      <h2 class="modal__title" id="lead-modal-title">Рассчитать стоимость</h2>
+      <p class="modal__subtitle">Заполните форму — менеджер рассчитает стоимость топлива и доставки</p>
+      <form id="lead-form" novalidate>
+        <div id="lead-form-fields"></div>
+        <button class="btn btn--accent form__submit" type="submit" id="lead-form-submit">Отправить заявку</button>
+        <p class="form__note">Отправка заявок будет подключена в спринте 5</p>
+      </form>
+      <div id="lead-success" class="form__success" hidden>
+        <div class="form__success-icon" aria-hidden="true">✓</div>
+        <h3 class="modal__title">Заявка принята</h3>
+        <p id="lead-success-text"></p>
+        <button class="btn btn--accent" type="button" data-close-modal style="margin-top:20px;width:100%;">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
+  <script src="js/icons.js"></script>
   <script src="js/config-loader.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/modal.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
